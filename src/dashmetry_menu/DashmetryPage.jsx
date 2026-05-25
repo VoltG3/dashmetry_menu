@@ -180,7 +180,7 @@ const DashmetryPage = () => {
     return (
         <>
             {showFps && <FpsCounter>{fps} FPS</FpsCounter>}
-            {showSecret && <Overlay />}
+            {showSecret && <Overlay onClick={toggleMenu} />}
             {showSecret && (
                 <>
                     {showInstructions && <DashmetryInstructions onClose={() => { console.log('[DashmetryPage] onClose called → setShowInstructions(false)'); setShowInstructions(false); }} />}
