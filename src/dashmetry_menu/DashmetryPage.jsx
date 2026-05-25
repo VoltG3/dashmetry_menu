@@ -127,6 +127,7 @@ const DashmetryPage = () => {
         if (ipcRenderer) {
             ipcRenderer.send('set-ignore-mouse', !showSecret);
         }
+        window.parent.postMessage({ type: 'menu-state', visible: showSecret }, '*');
     }, [showSecret]);
 
     useEffect(() => {

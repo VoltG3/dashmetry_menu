@@ -129,21 +129,31 @@ overlay.appendChild(iframe);
 
 let menuVisible = false;
 
+function setMenuVisible(visible) {
+    menuVisible = visible;
+    const pe = visible ? 'all' : 'none';
+    overlay.style.pointerEvents = pe;
+    iframe.style.pointerEvents = pe;
+    if (!visible) {
+        iframe.blur();
+        document.body.focus();
+    }
+}
+
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
         e.preventDefault();
         e.stopPropagation();
-        menuVisible = !menuVisible;
-        const pe = menuVisible ? 'all' : 'none';
-        overlay.style.pointerEvents = pe;
-        iframe.style.pointerEvents = pe;
+        setMenuVisible(!menuVisible);
         iframe.contentWindow.postMessage({ type: 'toggle-menu' }, '*');
-        if (!menuVisible) {
-            iframe.blur();
-            document.body.focus();
-        }
     }
-}, true);`;
+}, true);
+
+window.addEventListener('message', (e) => {
+    if (e.data?.type === 'menu-state') {
+        setMenuVisible(e.data.visible);
+    }
+});`;
 
 function downloadFile(filename, content, type = 'text/plain') {
     const blob = new Blob([content], { type });
