@@ -136,6 +136,10 @@ document.addEventListener('keydown', (e) => {
         menuVisible = !menuVisible;
         overlay.style.pointerEvents = menuVisible ? 'all' : 'none';
         iframe.contentWindow.postMessage({ type: 'toggle-menu' }, '*');
+        if (!menuVisible) {
+            iframe.blur();
+            document.body.focus();
+        }
     }
 }, true);`;
 
