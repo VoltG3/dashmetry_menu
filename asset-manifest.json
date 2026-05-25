@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dashmetry_menu/static/css/main.1288e8f8.css",
-    "main.js": "/dashmetry_menu/static/js/main.10b59f24.js",
+    "main.js": "/dashmetry_menu/static/js/main.981daa82.js",
     "static/js/488.50652dae.chunk.js": "/dashmetry_menu/static/js/488.50652dae.chunk.js",
     "index.html": "/dashmetry_menu/index.html",
     "main.1288e8f8.css.map": "/dashmetry_menu/static/css/main.1288e8f8.css.map",
-    "main.10b59f24.js.map": "/dashmetry_menu/static/js/main.10b59f24.js.map",
+    "main.981daa82.js.map": "/dashmetry_menu/static/js/main.981daa82.js.map",
     "488.50652dae.chunk.js.map": "/dashmetry_menu/static/js/488.50652dae.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1288e8f8.css",
-    "static/js/main.10b59f24.js"
+    "static/js/main.981daa82.js"
   ]
 }
