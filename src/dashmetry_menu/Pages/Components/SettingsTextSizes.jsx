@@ -14,8 +14,11 @@ export const SettingsTextSizes = ({ menuFontSize, setMenuFontSize, headerFontSiz
             </StyledContentSectionName>
 
             <StyledContentOptions>
-                <div>
-                    <p>menu</p>
+                <div style={{ display: 'flex', alignItems: 'center', height: '30px',flexDirection: 'row' }}>
+                    <div style={{ width: '70px'}}>
+                        <p>menu</p>
+                    </div>
+
                     <input
                         type="range"
                         min="10"
@@ -25,8 +28,10 @@ export const SettingsTextSizes = ({ menuFontSize, setMenuFontSize, headerFontSiz
                     />
                     <p>{menuFontSize}px</p>
                 </div>
-                <div>
-                    <p>header</p>
+                <div style={{ display: 'flex', alignItems: 'center', height: '30px',flexDirection: 'row' }}>
+                    <div style={{ width: '70px'}}>
+                        <p>header</p>
+                    </div>
                     <input
                         type="range"
                         min="20"
@@ -36,8 +41,10 @@ export const SettingsTextSizes = ({ menuFontSize, setMenuFontSize, headerFontSiz
                     />
                     <p>{headerFontSize}px</p>
                 </div>
-                <div>
-                    <p>content</p>
+                <div style={{ display: 'flex', alignItems: 'center', height: '30px',flexDirection: 'row' }}>
+                    <div style={{ width: '70px'}}>
+                        <p>content</p>
+                    </div>
                     <input
                         type="range"
                         min="10"

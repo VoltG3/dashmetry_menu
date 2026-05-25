@@ -3,7 +3,11 @@ import './temporary.css';
 import SectionHeader from "./Sections/SectionHeader";
 import SectionMenu from "./Sections/SectionMenu";
 import SectionContent from "./Sections/SectionContent";
+import { DashmetryInstructions } from "./DashmetryInstructions";
 import styled from "styled-components";
+
+const isElectron = typeof window !== 'undefined' && window.process?.type === 'renderer';
+const ipcRenderer = isElectron ? window.require('electron').ipcRenderer : null;
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -34,7 +38,7 @@ const BodyContainer = styled.div`
 const Overlay = styled.div`
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    //background: rgba(0, 0, 0, 0.55);
     z-index: 9998;
 `
 
@@ -70,30 +74,60 @@ const DashmetryPage = () => {
     const [contentFontSize, setContentFontSize] = useState(16);
     const [showFps, setShowFps] = useState(false);
     const [fps, setFps] = useState(0);
+    const [showInstructions, setShowInstructions] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const isDragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
     const frameCount = useRef(0);
     const lastTime = useRef(performance.now());
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Tab') {
-                event.preventDefault();
-                setShowSecret(prev => {
-                    if (!prev) {
-                        setPosition({
-                            x: window.innerWidth / 2 - 500,
-                            y: window.innerHeight / 2 - 450,
-                        });
-                    }
-                    return !prev;
+    const toggleMenu = () => {
+        setShowSecret(prev => {
+            console.log(`[DashmetryPage] toggleMenu: showSecret ${prev} → ${!prev}`);
+            if (!prev) {
+                setPosition({
+                    x: window.innerWidth / 2 - 500,
+                    y: window.innerHeight / 2 - 450,
                 });
+            } else {
+                setShowInstructions(false);
+            }
+            return !prev;
+        });
+    };
+
+    useEffect(() => {
+        if (ipcRenderer) {
+            ipcRenderer.on('toggle-menu', toggleMenu);
+            return () => ipcRenderer.removeListener('toggle-menu', toggleMenu);
+        } else {
+            const handleKeyDown = (event) => {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                    toggleMenu();
+                }
+            };
+            window.addEventListener('keydown', handleKeyDown);
+            return () => window.removeEventListener('keydown', handleKeyDown);
+        }
+    }, []);
+
+    // Browser extension mode — saņem postMessage no content.js
+    useEffect(() => {
+        const handleMessage = (e) => {
+            if (e.data?.type === 'toggle-menu') {
+                toggleMenu();
             }
         };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
     }, []);
+
+    useEffect(() => {
+        if (ipcRenderer) {
+            ipcRenderer.send('set-ignore-mouse', !showSecret);
+        }
+    }, [showSecret]);
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -140,26 +174,31 @@ const DashmetryPage = () => {
         };
     };
 
+    console.log(`[DashmetryPage] render — showSecret=${showSecret}, showInstructions=${showInstructions}`);
+
     return (
         <>
             {showFps && <FpsCounter>{fps} FPS</FpsCounter>}
             {showSecret && <Overlay />}
             {showSecret && (
-                <HeaderContainer
-                    $bgColor1={bgColor1}
-                    $bgColor2={bgColor2}
-                    $gradientEnabled={gradientEnabled}
-                    $br={borderRadius}
-                    style={{ left: position.x, top: position.y }}
-                    onMouseDown={handleMouseDown}
-                >
-                    <SectionHeader h1Color={h1Color} br={borderRadius} borderColor={borderColor} borderHeight={borderHeight} headerFontSize={headerFontSize} />
+                <>
+                    {showInstructions && <DashmetryInstructions onClose={() => { console.log('[DashmetryPage] onClose called → setShowInstructions(false)'); setShowInstructions(false); }} />}
+                    <HeaderContainer
+                        $bgColor1={bgColor1}
+                        $bgColor2={bgColor2}
+                        $gradientEnabled={gradientEnabled}
+                        $br={borderRadius}
+                        style={{ left: position.x, top: position.y }}
+                        onMouseDown={handleMouseDown}
+                    >
+                        <SectionHeader h1Color={h1Color} br={borderRadius} borderColor={borderColor} borderHeight={borderHeight} headerFontSize={headerFontSize} />
 
-                    <BodyContainer $br={borderRadius} onMouseDown={(e) => e.stopPropagation()}>
-                        <SectionMenu setActivePage={setActivePage} activePage={activePage} pColor={pColor} br={borderRadius} menuFontSize={menuFontSize} />
-                        <SectionContent activePage={activePage} setBgColor1={setBgColor1} bgColor1={bgColor1} setBgColor2={setBgColor2} bgColor2={bgColor2} gradientEnabled={gradientEnabled} setGradientEnabled={setGradientEnabled} pColor={pColor} setPColor={setPColor} h1Color={h1Color} setH1Color={setH1Color} borderRadius={borderRadius} setBorderRadius={setBorderRadius} borderColor={borderColor} setBorderColor={setBorderColor} borderHeight={borderHeight} setBorderHeight={setBorderHeight} contentFontSize={contentFontSize} menuFontSize={menuFontSize} setMenuFontSize={setMenuFontSize} headerFontSize={headerFontSize} setHeaderFontSize={setHeaderFontSize} setContentFontSize={setContentFontSize} contentPColor={contentPColor} setContentPColor={setContentPColor} contentH1Color={contentH1Color} setContentH1Color={setContentH1Color} showFps={showFps} setShowFps={setShowFps} />
-                    </BodyContainer>
-                </HeaderContainer>
+                        <BodyContainer $br={borderRadius} onMouseDown={(e) => e.stopPropagation()}>
+                            <SectionMenu setActivePage={setActivePage} activePage={activePage} pColor={pColor} br={borderRadius} menuFontSize={menuFontSize} setShowInstructions={setShowInstructions} />
+                            <SectionContent activePage={activePage} setBgColor1={setBgColor1} bgColor1={bgColor1} setBgColor2={setBgColor2} bgColor2={bgColor2} gradientEnabled={gradientEnabled} setGradientEnabled={setGradientEnabled} pColor={pColor} setPColor={setPColor} h1Color={h1Color} setH1Color={setH1Color} borderRadius={borderRadius} setBorderRadius={setBorderRadius} borderColor={borderColor} setBorderColor={setBorderColor} borderHeight={borderHeight} setBorderHeight={setBorderHeight} contentFontSize={contentFontSize} menuFontSize={menuFontSize} setMenuFontSize={setMenuFontSize} headerFontSize={headerFontSize} setHeaderFontSize={setHeaderFontSize} setContentFontSize={setContentFontSize} contentPColor={contentPColor} setContentPColor={setContentPColor} contentH1Color={contentH1Color} setContentH1Color={setContentH1Color} showFps={showFps} setShowFps={setShowFps} />
+                        </BodyContainer>
+                    </HeaderContainer>
+                </>
             )}
         </>
     );

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Dashmetry Menu",
+  "version": "1.0",
+  "description": "Overlay menu for any webpage. Press Tab to toggle.",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ]
+}

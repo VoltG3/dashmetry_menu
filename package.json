@@ -3,6 +3,7 @@
   "name": "dashmetry_menu",
   "version": "0.1.0",
   "private": true,
+  "main": "public/electron.js",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -27,7 +28,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "electron:start": "electron .",
+    "electron:dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:build": "yarn build && electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +52,18 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "concurrently": "^9.0.0",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.dashmetry.menu",
+    "productName": "Dashmetry Menu",
+    "files": ["build/**/*", "public/electron.js"],
+    "win": { "target": "portable" },
+    "linux": { "target": "AppImage" },
+    "mac": { "target": "dmg" }
   }
 }

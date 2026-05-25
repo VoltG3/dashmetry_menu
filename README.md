@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# Dashmetry Menu
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Pielāgojams overlay menijs, kas darbojas virs jebkuras web lapas vai spēles pārlūkprogrammā. Aktivizējas ar **Tab** taustiņu.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Instalētās dependencies
 
-### `yarn start`
+### Runtime
+| Pakotne | Versija | Mērķis |
+|---|---|---|
+| `react` | ^19 | UI framework |
+| `react-dom` | ^19 | DOM rendering |
+| `react-router` | ^7 | Navigācija |
+| `styled-components` | ^6 | CSS-in-JS stili |
+| `web-vitals` | ^5 | Performancea metrikas |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Dev / Build
+| Pakotne | Versija | Mērķis |
+|---|---|---|
+| `react-scripts` | 5.0.1 | CRA build rīks |
+| `electron` | ^33 | Desktop overlay čaula |
+| `electron-builder` | ^25 | Electron iepakošana (.exe, AppImage, .dmg) |
+| `concurrently` | ^9 | Vairāku procesu paralēla palaišana |
+| `wait-on` | ^8 | Gaida kamēr dev serveris ir pieejams |
+| `gh-pages` | ^6 | GitHub Pages deployment |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `yarn test`
+## Kā darbojas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Web versija
+Parasta React aplikācija. Tab taustiņš darbojas tikai ja pārlūka logs ir aktīvs.
 
-### `yarn build`
+### Electron versija (overlay)
+Electron izveido **caurredzamu, bezrāmja logu** (`transparent`, `frame: false`, `alwaysOnTop: true`) kas peld virs visiem citiem logiem — ieskaitot pārlūkprogrammu un Windowed/Borderless spēles.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Kā tas strādā:**
+1. Logs aizņem visu ekrānu bet ir neredzams un caursitams (`setIgnoreMouseEvents(true)`)
+2. Kad nospiež **Tab** — `globalShortcut` noķer taustiņu pirms jebkura cita loga, sūta IPC signālu React
+3. React parāda menu un informē Electron ka logs tagad saņem peles klikšķus
+4. Kad nospiež Tab vēlreiz — menu paslēpjas, logs atkal kļūst caursitams
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Kā palaist
 
-### `yarn eject`
+### Prasības
+```
+Node.js >= 18
+yarn vai npm
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Instalēt dependencies
+```bash
+yarn install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Web režīms (pārlūkā)
+```bash
+yarn start
+# Atver http://localhost:3000
+# Tab taustiņš aktivizē menu
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Electron overlay (virs citas lapas/spēles)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**Dev režīms:**
+```bash
+# Automātiski (palaiž abus procesus):
+yarn electron:dev
 
-## Learn More
+# Vai manuāli divās termināļos:
+# 1. terminals:
+yarn start
+# 2. terminals (kad localhost:3000 ir gatavs):
+yarn electron:start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Production build:**
+```bash
+yarn electron:build
+# Rezultāts: dist/ mapē (.exe Windows, AppImage Linux, .dmg Mac)
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### GitHub Pages deployment
+```bash
+yarn deploy
+```
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Tab taustiņš virs citas adreses pārlūkā
 
-### Analyzing the Bundle Size
+Electron versijā Tab taustiņš ir reģistrēts kā **globāls īsceļš** — tas darbojas pat ja Electron logs nav fokusēts.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Soļi:**
+1. Palaid `yarn electron:dev`
+2. Atver jebkuru lapu savā pārlūkprogrammā (Chrome, Firefox u.c.)
+3. Nospiez **Tab** — menu parādās virs pārlūka loga
+4. Nospiez **Tab** vēlreiz — menu pazūd, pārlūks darbojas kā parasti
 
-### Making a Progressive Web App
+> **Svarīgi:** Electron versijā Tab taustiņš tiek pārtveerts globāli — tas nozīmē ka Tab nedarbosies citās programmās kamēr Electron ir palaists. Shortcut var mainīt `public/electron.js` failā rindā `globalShortcut.register('Tab', ...)`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## Projekta struktūra
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  dashmetry_menu/
+    DashmetryPage.jsx       # Galvenais komponents, state menedžments
+    Sections/
+      SectionHeader.jsx     # Virsraksts
+      SectionMenu.jsx       # Kreisā navigācija
+      SectionContent.jsx    # Labā satura zona
+    Pages/
+      SettingsPage.jsx      # Iestatījumi
+      LabelsPage.jsx        # FPS counter un citas etiķetes
+      CreditsPage.jsx       # Versija (no git tag)
+      PlayerPage.jsx
+      VisualsPage.jsx
+    utils/
+      colorUtils.js         # Krāsu palīgfunkcijas
+public/
+  electron.js               # Electron main process
+```

@@ -34,7 +34,7 @@ const NavText = styled.p`
     }
 `
 
-export default function SectionMenu({ activePage, setActivePage, pColor, br, menuFontSize }) {
+export default function SectionMenu({ activePage, setActivePage, pColor, br, menuFontSize, setShowInstructions }) {
 
     const hoverColor = lightenColor(pColor);
 
@@ -53,7 +53,7 @@ export default function SectionMenu({ activePage, setActivePage, pColor, br, men
                 <NavText $color={pColor} $hoverColor={hoverColor} $fontSize={menuFontSize}>Settings</NavText>
             </NavButton>
 
-            <NavButton active={activePage === 'credits'} onClick={() => setActivePage('credits')}>
+            <NavButton onClick={() => setShowInstructions(true)}>
                 <NavText $color={pColor} $hoverColor={hoverColor} $fontSize={menuFontSize}>Credits</NavText>
             </NavButton>
 

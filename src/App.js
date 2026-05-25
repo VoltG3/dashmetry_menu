@@ -3,6 +3,8 @@ import DashmetryPage from './dashmetry_menu/DashmetryPage';
 
 function App() {
 
+  console.log('[App] render');
+
   return (
       <div style={{
         display: 'flex',
