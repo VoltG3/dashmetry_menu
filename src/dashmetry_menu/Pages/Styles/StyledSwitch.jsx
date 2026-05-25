@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
 
-export const StyledSwitch = styled.div`
+export const StyledSwitch = styled.button`
 
 `

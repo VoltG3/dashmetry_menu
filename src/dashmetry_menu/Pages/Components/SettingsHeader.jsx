@@ -1,23 +1,25 @@
 import {StyledButton} from "../Styles/StyledButton";
+import {StyledContentSection} from "../Styles/Content/StyledContentSection";
+import {StyledContentSectionName} from "../Styles/Content/StyledContentSectionName";
+import {StyledContentOptions} from "../Styles/Content/StyledContentOptions";
+import {StyledContentRestore} from "../Styles/Content/StyledContentRestore";
 
 
 export const SettingsHeader = ({ onRestoreAll }) => {
 
     return (
-        <>
-            <div className="section">
-                <div className="first">
-                    <h1>Settings</h1>
-                </div>
-                <div className="second">
+        <StyledContentSection>
+            <StyledContentSectionName>
+                <h1>Settings</h1>
+            </StyledContentSectionName>
+            <StyledContentOptions>
 
-                </div>
-                <div className="third">
-                    <StyledButton onClick={onRestoreAll}>
-                        Restoreall
-                    </StyledButton>
-                </div>
-            </div>
-        </>
+            </StyledContentOptions>
+            <StyledContentRestore>
+                <StyledButton onClick={onRestoreAll}>
+                    Restoreall
+                </StyledButton>
+            </StyledContentRestore>
+        </StyledContentSection>
     )
 }

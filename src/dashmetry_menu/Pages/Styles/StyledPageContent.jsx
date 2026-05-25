@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledPage = styled.div`
+export const StyledPageContent = styled.div`
     display: block;
     
    width: 100%;

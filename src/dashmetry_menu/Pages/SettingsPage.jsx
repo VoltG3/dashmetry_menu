@@ -1,5 +1,5 @@
-import { StyledPage } from "./Styles/StyledPage";
-import {StyledPageContainer} from "./Styles/StyledPageContainer";
+import { StyledPageContent } from "./Styles/StyledPageContent";
+import {StyledContentContainer} from "./Styles/Content/StyledContentContainer";
 import {SettingsBackground} from "./Components/SettingsBackground";
 import {SettingsGradient} from "./Components/SettingsGradient";
 import {SettingsTextColor} from "./Components/SettingsTextColor";
@@ -29,8 +29,8 @@ export default function SettingsPage({ setBgColor1, bgColor1, setBgColor2, bgCol
     };
 
     return (
-        <StyledPage $br={borderRadius}>
-            <StyledPageContainer>
+        <StyledPageContent $br={borderRadius}>
+            <StyledContentContainer>
                <SettingsHeader onRestoreAll={handleRestoreAll} />
                <SettingsBackground bgColor1={bgColor1} setBgColor1={setBgColor1} bgColor2={bgColor2} setBgColor2={setBgColor2} />
                <SettingsGradient gradientEnabled={gradientEnabled} setGradientEnabled={setGradientEnabled} />
@@ -39,7 +39,7 @@ export default function SettingsPage({ setBgColor1, bgColor1, setBgColor2, bgCol
                <SettingsBorderRadius borderRadius={borderRadius} setBorderRadius={setBorderRadius} />
                <SettingsBorderColor borderColor={borderColor} setBorderColor={setBorderColor} />
                <SettingsBorderHeight borderHeight={borderHeight} setBorderHeight={setBorderHeight} />
-            </StyledPageContainer>
-        </StyledPage>
+            </StyledContentContainer>
+        </StyledPageContent>
     )
 }
