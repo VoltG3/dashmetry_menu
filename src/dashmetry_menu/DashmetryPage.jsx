@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './temporary.css';
+import SectionHeader from "./Sections/SectionHeader";
+import SectionMenu from "./Sections/SectionMenu";
+import SectionContent from "./Sections/SectionContent";
+import styled from "styled-components";
 
 const DashmetryPage = () => {
     const [showSecret, setShowSecret] = useState(false);
@@ -54,33 +58,42 @@ const DashmetryPage = () => {
         };
     };
 
+    const HeaderContainer = styled.div`
+        position: fixed;
+        z-index: 9999;
+        width : 1000px;
+        height : 900px;
+        border-radius : 100px;
+        //border: 1px solid red;
+        background: linear-gradient(45deg,  orange, yellow, orange);
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        cursor: grab;
+        user-select: none;
+    `;
+
+    const BodyContainer = styled.div`
+        display: flex;
+        flex-direction: row;
+        height: 800px;
+        //border: 1px solid orange;
+        border-bottom-left-radius : 100px;
+        border-bottom-right-radius : 100px;
+    `
+
     return (
         <>
             {showSecret && (
-                <div
-                    className="menu_container"
+                <HeaderContainer
                     style={{ left: position.x, top: position.y }}
                     onMouseDown={handleMouseDown}
                 >
-                    <div className="menu_section_header">
-                        <h1 className="menu_h1">Dasmetry Menu PAID</h1>
-                    </div>
+                    <SectionHeader />
 
-                    <div className="mods_container">
-                        <div className="mods_options">
-                            <p className="paragraph_mod_options">Player</p>
-                            <p className="paragraph_mod_options">Movement</p>
-                            <p className="paragraph_mod_options">Visuals</p>
-                            <p className="paragraph_mod_options">Gameplay</p>
-                            <p className="paragraph_mod_options">Settings</p>
-                            <p className="paragraph_mod_options">Credits</p>
-                        </div>
-
-                        <div className="mods_settings">
-                            <p>mods_settings</p>
-                        </div>
-                    </div>
-                </div>
+                    <BodyContainer>
+                        <SectionMenu />
+                        <SectionContent />
+                    </BodyContainer>
+                </HeaderContainer>
             )}
         </>
     );
