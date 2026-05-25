@@ -1,24 +1,26 @@
-import {StyledButton} from "../Styles/StyledButton";
 import {StyledContentSection} from "../Styles/Content/StyledContentSection";
-import {StyledContentSectionName} from "../Styles/Content/StyledContentSectionName";
 import {StyledContentOptions} from "../Styles/Content/StyledContentOptions";
 import {StyledContentRestore} from "../Styles/Content/StyledContentRestore";
+import {StyledContentSectionName} from "../Styles/Content/StyledContentSectionName";
+import {StyledButton} from "../Styles/StyledButton";
 
 
-export const SettingsHeader = ({ onRestoreAll }) => {
+export const LabelsFps = ({ showFps, setShowFps }) => {
 
     return (
         <StyledContentSection>
             <StyledContentSectionName>
-                <h1>Settings</h1>
+                <p>Fps</p>
             </StyledContentSectionName>
-            <StyledContentOptions>
 
-            </StyledContentOptions>
-            <StyledContentRestore>
-                <StyledButton onClick={onRestoreAll}>
-                    Restore
+            <StyledContentOptions>
+                <StyledButton onClick={() => setShowFps(prev => !prev)}>
+                    {showFps ? 'Hide FPS' : 'Show FPS'}
                 </StyledButton>
+            </StyledContentOptions>
+
+            <StyledContentRestore>
+
             </StyledContentRestore>
         </StyledContentSection>
     )

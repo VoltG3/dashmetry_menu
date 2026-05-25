@@ -31,6 +31,27 @@ const BodyContainer = styled.div`
     border-bottom-right-radius : ${({ $br }) => $br}px;
 `
 
+const Overlay = styled.div`
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9998;
+`
+
+const FpsCounter = styled.div`
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 10001;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    color: #00ff00;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+`
+
 const DashmetryPage = () => {
     const [showSecret, setShowSecret] = useState(false);
     const [activePage, setActivePage] = useState('home');
@@ -47,9 +68,13 @@ const DashmetryPage = () => {
     const [menuFontSize, setMenuFontSize] = useState(35);
     const [headerFontSize, setHeaderFontSize] = useState(60);
     const [contentFontSize, setContentFontSize] = useState(16);
+    const [showFps, setShowFps] = useState(false);
+    const [fps, setFps] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const isDragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
+    const frameCount = useRef(0);
+    const lastTime = useRef(performance.now());
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -90,6 +115,23 @@ const DashmetryPage = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (!showFps) return;
+        let animId;
+        const loop = (now) => {
+            frameCount.current++;
+            const elapsed = now - lastTime.current;
+            if (elapsed >= 1000) {
+                setFps(Math.round(frameCount.current * 1000 / elapsed));
+                frameCount.current = 0;
+                lastTime.current = now;
+            }
+            animId = requestAnimationFrame(loop);
+        };
+        animId = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(animId);
+    }, [showFps]);
+
     const handleMouseDown = (e) => {
         isDragging.current = true;
         dragOffset.current = {
@@ -100,6 +142,8 @@ const DashmetryPage = () => {
 
     return (
         <>
+            {showFps && <FpsCounter>{fps} FPS</FpsCounter>}
+            {showSecret && <Overlay />}
             {showSecret && (
                 <HeaderContainer
                     $bgColor1={bgColor1}
@@ -113,7 +157,7 @@ const DashmetryPage = () => {
 
                     <BodyContainer $br={borderRadius} onMouseDown={(e) => e.stopPropagation()}>
                         <SectionMenu setActivePage={setActivePage} activePage={activePage} pColor={pColor} br={borderRadius} menuFontSize={menuFontSize} />
-                        <SectionContent activePage={activePage} setBgColor1={setBgColor1} bgColor1={bgColor1} setBgColor2={setBgColor2} bgColor2={bgColor2} gradientEnabled={gradientEnabled} setGradientEnabled={setGradientEnabled} pColor={pColor} setPColor={setPColor} h1Color={h1Color} setH1Color={setH1Color} borderRadius={borderRadius} setBorderRadius={setBorderRadius} borderColor={borderColor} setBorderColor={setBorderColor} borderHeight={borderHeight} setBorderHeight={setBorderHeight} contentFontSize={contentFontSize} menuFontSize={menuFontSize} setMenuFontSize={setMenuFontSize} headerFontSize={headerFontSize} setHeaderFontSize={setHeaderFontSize} setContentFontSize={setContentFontSize} contentPColor={contentPColor} setContentPColor={setContentPColor} contentH1Color={contentH1Color} setContentH1Color={setContentH1Color} />
+                        <SectionContent activePage={activePage} setBgColor1={setBgColor1} bgColor1={bgColor1} setBgColor2={setBgColor2} bgColor2={bgColor2} gradientEnabled={gradientEnabled} setGradientEnabled={setGradientEnabled} pColor={pColor} setPColor={setPColor} h1Color={h1Color} setH1Color={setH1Color} borderRadius={borderRadius} setBorderRadius={setBorderRadius} borderColor={borderColor} setBorderColor={setBorderColor} borderHeight={borderHeight} setBorderHeight={setBorderHeight} contentFontSize={contentFontSize} menuFontSize={menuFontSize} setMenuFontSize={setMenuFontSize} headerFontSize={headerFontSize} setHeaderFontSize={setHeaderFontSize} setContentFontSize={setContentFontSize} contentPColor={contentPColor} setContentPColor={setContentPColor} contentH1Color={contentH1Color} setContentH1Color={setContentH1Color} showFps={showFps} setShowFps={setShowFps} />
                     </BodyContainer>
                 </HeaderContainer>
             )}

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const StyledPageContent = styled.div`
-    display: block;
-    
-   width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+     width: 100%;
     height: 100%;
     
     //border: 1px solid #ae1313;
