@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './temporary.css';
 
-const Temporary = () => {
+const DashmetryPage = () => {
     const [showSecret, setShowSecret] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const isDragging = useRef(false);
@@ -86,4 +86,4 @@ const Temporary = () => {
     );
 }
 
-export default Temporary;
+export default DashmetryPage;

@@ -1,5 +1,5 @@
 import './App.css';
-import Temporary from './Temporary';
+import DashmetryPage from './dashmetry_menu/DashmetryPage';
 
 function App() {
 
@@ -14,7 +14,7 @@ function App() {
         margin: 0,
         overflow: 'hidden'
       }}>
-          <Temporary />
+          <DashmetryPage />
       </div>
   );
 }
