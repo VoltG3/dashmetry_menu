@@ -5,8 +5,31 @@ import SectionMenu from "./Sections/SectionMenu";
 import SectionContent from "./Sections/SectionContent";
 import styled from "styled-components";
 
+const HeaderContainer = styled.div`
+    position: fixed;
+    z-index: 9999;
+    width : 1000px;
+    height : 900px;
+    border-radius : 100px;
+    //border: 1px solid red;
+    background: linear-gradient(45deg,  orange, yellow, orange);
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+    cursor: grab;
+    user-select: none;
+`;
+
+const BodyContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 800px;
+    //border: 1px solid orange;
+    border-bottom-left-radius : 100px;
+    border-bottom-right-radius : 100px;
+`
+
 const DashmetryPage = () => {
     const [showSecret, setShowSecret] = useState(false);
+    const [activePage, setActivePage] = useState('home');
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const isDragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
@@ -58,28 +81,6 @@ const DashmetryPage = () => {
         };
     };
 
-    const HeaderContainer = styled.div`
-        position: fixed;
-        z-index: 9999;
-        width : 1000px;
-        height : 900px;
-        border-radius : 100px;
-        //border: 1px solid red;
-        background: linear-gradient(45deg,  orange, yellow, orange);
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
-        cursor: grab;
-        user-select: none;
-    `;
-
-    const BodyContainer = styled.div`
-        display: flex;
-        flex-direction: row;
-        height: 800px;
-        //border: 1px solid orange;
-        border-bottom-left-radius : 100px;
-        border-bottom-right-radius : 100px;
-    `
-
     return (
         <>
             {showSecret && (
@@ -90,8 +91,8 @@ const DashmetryPage = () => {
                     <SectionHeader />
 
                     <BodyContainer>
-                        <SectionMenu />
-                        <SectionContent />
+                        <SectionMenu setActivePage={setActivePage} activePage={activePage} />
+                        <SectionContent activePage={activePage} />
                     </BodyContainer>
                 </HeaderContainer>
             )}
