@@ -37,7 +37,9 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         e.stopPropagation();
         menuVisible = !menuVisible;
-        overlay.style.pointerEvents = menuVisible ? 'all' : 'none';
+        const pe = menuVisible ? 'all' : 'none';
+        overlay.style.pointerEvents = pe;
+        iframe.style.pointerEvents = pe;
         iframe.contentWindow.postMessage({ type: 'toggle-menu' }, '*');
         if (!menuVisible) {
             iframe.blur();
